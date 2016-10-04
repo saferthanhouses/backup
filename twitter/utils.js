@@ -5,6 +5,7 @@ module.exports = exports = {}
 
 // slash off that awkward 0th index 
 exports.removeFirst = through(function(data){
+  // console.log("removeFirst");
   this.queue(data[1])
 })
 
@@ -14,13 +15,16 @@ exports.test = through(function(data){
 
 // just for testing - only let through tweets we've published
 exports.testingReply = through(function(data){
-  if (data.user && data.user.screen_name === 'gotYourBackBot'){
+  // console.log(data)
+  if (data.user && data.user.screen_name === 'joe75165824'){
+    // console.log("testingReply")
     this.queue(data)
   }
 })
 
 // only pass on tweets with hastag - backup
 exports.hashTagsOnly = through(function(data){
+  console.log("hastTagsOnly");
   let hashTagPresent = 
     data.entities.hashtags && 
     data.entities.hashtags
@@ -32,6 +36,7 @@ exports.hashTagsOnly = through(function(data){
 })
 
 exports.parseData = through(function(data){
+  console.log("parsedData");
   let {
     created_at, 
     id, 
@@ -64,10 +69,12 @@ exports.parseData = through(function(data){
   } : {}
 
   Object.assign(subSet, {user: subUser, retweeted_status})
+  // console.log(subSet);
   this.queue(subSet)
 })
 
 exports.dbCheck = through(function(data){
+  // console.log("dbCheck");
   if (!history[data.id]){
     history[data.id] = data
     this.queue(data)
